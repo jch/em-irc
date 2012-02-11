@@ -1,6 +1,6 @@
 # EventMachine IRC Client
 
-[![CI Build Status](https://secure.travis-ci.org/jch/em-irc.png?branch=master)]
+[CI Build Status](https://secure.travis-ci.org/jch/em-irc.png?branch=master)
 
 em-irc is an IRC client that uses EventMachine to handle connections to servers.
 
