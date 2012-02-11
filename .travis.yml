@@ -7,9 +7,9 @@ gemfile:
 before_script:
   - "sudo apt-get install ngircd"
   - "echo 'starting unencrypted ircd...'"
-  - "ngircd -t -f spec/config/ngircd-unencrypted.conf"
+  - "ngircd -t -f spec/config/ngircd-unencrypted.conf | cat"
   - "echo 'starting encrypted ircd...'"
-  - "ngircd -t -f spec/config/ngircd-encrypted.conf"
+  - "ngircd -t -f spec/config/ngircd-encrypted.conf | cat"
   - "ps aux | grep ngircd"
   - "sleep 1"
 script: "bundle exec rake"
