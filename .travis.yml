@@ -5,10 +5,7 @@ bundler_args: --without darwin --without development
 gemfile:
   - Gemfile
 before_script:
-  - "sudo apt-get -q -y install ngircd"
-  - "lsof -i :6667 | grep LISTEN"
-  - "lsof -i :6697 | grep LISTEN"
+  - "sudo apt-get -qq -y install ngircd"
   - "ngircd -n -f spec/config/ngircd-unencrypted.conf"
-  - "ngircd -n -f spec/config/ngircd-encrypted.conf"
   - "ps aux | grep ngircd"
 script: "bundle exec rake"
