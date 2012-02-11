@@ -49,11 +49,6 @@ end
 
 # Assumes there is an IRC server running at localhost 6667
 describe EventMachine::IRC::Client, :integration => true do
-  before :all do
-    raise "unencrypted ircd not on :16667" unless `lsof -i :16667`.chomp.size > 1
-    raise "encrypted ircd not on :16697" unless `lsof -i :16697`.chomp.size > 1
-  end
-
   let(:options) do
     {
       host: '127.0.0.1',
@@ -66,11 +61,15 @@ describe EventMachine::IRC::Client, :integration => true do
   end
 
   context 'non-ssl' do
+    before :all do
+      raise "unencrypted ircd not on :16667" unless `lsof -i :16667`.chomp.size > 1
+    end
     it_behaves_like "integration"
   end
 
   context 'ssl' do
-    before do
+    before :all do
+      raise "encrypted ircd not on :16697" unless `lsof -i :16697`.chomp.size > 1
       @options = {
         port: '16697',
         ssl: true
