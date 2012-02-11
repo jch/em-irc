@@ -6,6 +6,7 @@ gemfile:
   - Gemfile
 before_script:
   - "sudo apt-get -qq -y install ngircd"
-  - "ngircd -n -f spec/config/ngircd-unencrypted.conf"
+  - "ngircd -f spec/config/ngircd-unencrypted.conf"
+  - "ngircd -f spec/config/ngircd-encrypted.conf"
   - "ps aux | grep ngircd"
 script: "bundle exec rake"
