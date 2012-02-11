@@ -1,12 +1,14 @@
 rvm:
   - 1.9.2
   - 1.9.3
-bundler_args: --without darwin
+bundler_args: --without darwin --without development
 gemfile:
   - Gemfile
 before_script:
   - "sudo apt-get install ngircd"
-  - "ngircd -f spec/config/ngircd-unencrypted.conf"
-  - "ngircd -f spec/config/ngircd-encrypted.conf"
+  - "killall ngircd"
+  - "ngircd -t -f spec/config/ngircd-unencrypted.conf"
+  - "ngircd -t -f spec/config/ngircd-encrypted.conf"
+  - "ps aux | grep ngircd"
   - "sleep 1"
 script: "bundle exec rake"
