@@ -1,0 +1,10 @@
+rvm:
+  - 1.9.2
+  - 1.9.3
+bundler_args: --without darwin
+gemfile:
+  - Gemfile
+before_script:
+  - "sudo apt-get install ngircd"
+  - "cd spec/config && ngircd -f ngircd-unencrypted.conf && ngircd -f ngircd-encrypted.conf"
+script: "rake spec"
