@@ -59,11 +59,15 @@ On OSX, you can install a server via [Homebrew](http://mxcl.github.com/homebrew/
 ```
 bundle
 brew install ngircd
-cd spec/config
-ngircd -f ngircd-unencrypted.conf
-ngircd -f ngircd-encrypted.conf
-rake  # or guard
+ngircd -f spec/config/ngircd-unencrypted.conf
+ngircd -f spec/config/ngircd-encrypted-openssl.conf
+bundle exec rake  # or guard
 ```
+
+If the server is not starting up correctly, make sure you're ngircd is
+compiled with openssl support rather than gnutls. You can see the server
+boot output by passing the '-n' flag. Also not that travis-ci builds
+are executed with gnutls.
 
 ## <a name="license"></a>License
 
