@@ -6,8 +6,9 @@ gemfile:
   - Gemfile
 before_script:
   - "sudo apt-get install ngircd"
-  - "killall ngircd"
+  - "echo 'starting unencrypted ircd...'"
   - "ngircd -t -f spec/config/ngircd-unencrypted.conf"
+  - "echo 'starting encrypted ircd...'"
   - "ngircd -t -f spec/config/ngircd-encrypted.conf"
   - "ps aux | grep ngircd"
   - "sleep 1"
