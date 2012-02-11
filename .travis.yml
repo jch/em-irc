@@ -6,6 +6,9 @@ gemfile:
   - Gemfile
 before_script:
   - "sudo apt-get install ngircd"
+  - "sleep 1"
+  - "lsof -i :6667 | grep LISTEN"
+  - "lsof -i :6697 | grep LISTEN"
   - "ngircd -n -f spec/config/ngircd-unencrypted.conf"
   - "ngircd -n -f spec/config/ngircd-encrypted.conf"
   - "ps aux | grep ngircd"
