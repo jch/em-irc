@@ -30,10 +30,17 @@ describe EventMachine::IRC::Client do
       subject.nick.should be_blank
     end
 
-    it 'should yield self' do
-      client = described_class.new do |c|
+    it 'should optionally yield self' do
+      described_class.new do |c|
         c.should be_kind_of(described_class)
       end
+    end
+
+    it 'should optionally instance eval' do
+      client = described_class.new do
+        host 'stella.net'
+      end
+      client.host.should == 'stella.net'
     end
 
     it 'should allow a custom logger' do

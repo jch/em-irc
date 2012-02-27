@@ -9,35 +9,44 @@ em-irc is an IRC client that uses EventMachine to handle connections to servers.
 ````ruby
 require 'em-irc'
 
-client = EventMachine::IRC::Client.new do |c|
-  c.host = 'irc.freenode.net'
-  c.port = '6667'
-  c.nick = 'jch'
+client = EventMachine::IRC::Client.new do
+  host 'irc.freenode.net'
+  port '6667'
+  nick 'jch'
 
-  c.on(:connect) do
+  on(:connect) do
     nick('jch')
   end
 
-  c.on(:nick) do
+  on(:nick) do
     join('#general')
     join('#private', 'key')
   end
 
-  c.on(:join) do |channel|  # called after joining a channel
+  on(:join) do |channel|  # called after joining a channel
     message(channel, "howdy all")
   end
 
-  c.on(:message) do |source, target, message|  # called when being messaged
+  on(:message) do |source, target, message|  # called when being messaged
     puts "<#{source}> -> <#{target}>: #{message}"
   end
 
   # callback for all messages sent from IRC server
-  c.on(:raw) do |hash|
+  on(:raw) do |hash|
     puts "#{hash[:prefix]} #{hash[:command]} #{hash[:params].join(' ')}"
   end
 end
 
 client.run!  # start EventMachine loop
+````
+
+Alternatively, if local variable access is needed, the first block variable is
+the client:
+
+````ruby
+client = EventMachine::IRC::Client.new do |c|
+  # c is the client instance
+end
 ````
 
 ## Examples

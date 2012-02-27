@@ -1,18 +1,23 @@
+require 'support/dsl_accessor'
+
 module EventMachine
   module IRC
     class Client
+      include DslAccessor
+
       # EventMachine::Connection object to IRC server
       # @private
       attr_accessor :conn
 
       # IRC server to connect to. Defaults to 127.0.0.1:6667
-      attr_accessor :host, :port
+      # attr_accessor :host, :port
+      dsl_accessor :host, :port
 
-      attr_accessor :realname
-      attr_accessor :ssl
+      dsl_accessor :realname
+      dsl_accessor :ssl
 
       # Custom logger
-      attr_accessor :logger
+      dsl_accessor :logger
 
       # Set of channels that this client is connected to
       # @private
@@ -48,7 +53,14 @@ module EventMachine
         @channels  = Set.new
         @callbacks = Hash.new
         @connected = false
-        yield self if block_given?
+
+        if block_given?
+          if blk.arity == 1
+            yield self
+          else
+            instance_eval(&blk)
+          end
+        end
       end
 
       # Creates a Eventmachine TCP connection with :host and :port. It should be called
