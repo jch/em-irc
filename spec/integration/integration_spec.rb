@@ -19,11 +19,16 @@ end
 
 shared_examples_for "integration" do
   it 'should work' do
-    dan = client(nick: 'dan')
-    bob = client(nick: 'bob')
+    dan = client
+    bob = client
+    ace = client
 
-    dan.on(:connect) {dan.join('#americano-test')}
-    bob.on(:connect) {bob.join('#americano-test')}
+    dan.on(:connect) {dan.nick('dan')}
+    bob.on(:connect) {bob.nick('bob')}
+    ace.on(:connect) {ace.nick('bob')}
+
+    dan.on(:nick) {dan.join('#americano-test')}
+    bob.on(:nick) {bob.join('#americano-test')}
 
     bob.on(:join) do |who, channel|
       bob.message(channel, "dan: hello bob")
@@ -33,17 +38,23 @@ shared_examples_for "integration" do
 
     EM.run {
       dan.connect
-      EM::add_timer(2) {bob.connect}
-      EM::add_timer(5) {EM::stop}
+      bob.connect
+      ace.connect
+      EM::add_timer(2) {EM::stop}
     }
 
     # TODO: matchers for commands
+    dan.nick.should == 'dan'
     dan.history.should =~ /Welcome/
     dan.history.should =~ /JOIN :#americano-test/
     dan.history.should =~ /dan: hello bob/
 
+    bob.nick.should == 'bob'
     bob.history.should =~ /Welcome/
     bob.history.should =~ /JOIN :#americano-test/
+
+    ace.nick.should == nil
+    ace.history.should =~ /Nickname already in use/
   end
 end
 

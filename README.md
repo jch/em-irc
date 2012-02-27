@@ -15,6 +15,10 @@ client = EventMachine::IRC::Client.new do |c|
   c.nick = 'jch'
 
   c.on(:connect) do
+    nick('jch')
+  end
+
+  c.on(:nick) do
     join('#general')
     join('#private', 'key')
   end

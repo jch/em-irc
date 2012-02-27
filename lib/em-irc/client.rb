@@ -8,7 +8,6 @@ module EventMachine
       # IRC server to connect to. Defaults to 127.0.0.1:6667
       attr_accessor :host, :port
 
-      attr_accessor :nick
       attr_accessor :realname
       attr_accessor :ssl
 
@@ -30,7 +29,6 @@ module EventMachine
       # @option options [String] :host
       # @option options [String] :port
       # @option options [Boolean] :ssl
-      # @option options [String] :nick
       # @option options [String] :realname
       #
       # @yield [client] new instance for decoration
@@ -40,15 +38,13 @@ module EventMachine
           host:     '127.0.0.1',
           port:     '6667',
           ssl:      false,
-          realname: 'Anonymous Annie',
-          nick:     "guest-#{Time.now.to_i % 1000}"
+          realname: 'Anonymous Annie'
         }.merge!(options)
 
         @host      = options[:host]
         @port      = options[:port]
         @ssl       = options[:ssl]
         @realname  = options[:realname]
-        @nick      = options[:nick]
         @channels  = Set.new
         @callbacks = Hash.new
         @connected = false
@@ -113,8 +109,15 @@ module EventMachine
 
       # Client commands
       # See [RFC 2812](http://tools.ietf.org/html/rfc2812)
-      def renick(nick)
-        send_data("NICK #{nick}")
+
+      # @return [String] nick if no param
+      # @return nil otherwise
+      def nick(nick = nil)
+        if nick
+          send_data("NICK #{nick}")
+        else
+          @nick
+        end
       end
 
       def user(username, mode, realname)
@@ -157,7 +160,17 @@ module EventMachine
 
       def handle_parsed_message(m)
         case m[:command]
-        when '001' # welcome message
+        when '001'
+          # ":irc.the.net 001 jessie :Welcome to the Internet Relay Network jessie!~jessie@localhost"
+          @nick = m[:params].first
+          trigger(:nick, @nick)
+        when '433'
+          # :irc.the.net 433 * bob :Nickname already in use
+          # ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
+          #  ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
+          #  ERR_UNAVAILRESOURCE             ERR_RESTRICTED
+          @nick = nil
+          trigger(:error, "nick in use")
         when 'PING'
           pong(m[:params].first)
           trigger(:ping, *m[:params])
@@ -185,8 +198,7 @@ module EventMachine
       # @private
       def ready
         @connected = true
-        renick(@nick)
-        user(@nick, '0', @realname)
+        user('guest', '0', @realname)
         trigger(:connect)
       end
 

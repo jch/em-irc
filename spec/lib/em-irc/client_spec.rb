@@ -26,8 +26,8 @@ describe EventMachine::IRC::Client do
       subject.should_not be_connected
     end
 
-    it 'should default a nick' do
-      subject.nick.should_not be_blank
+    it 'should have blank nick' do
+      subject.nick.should be_blank
     end
 
     it 'should yield self' do
