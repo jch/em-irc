@@ -68,7 +68,7 @@ module EventMachine
       # @see #on
       # @return [EventMachine::Connection]
       def connect
-        self.conn ||= EventMachine::connect(@host, @port, Dispatcher, parent: self)
+        self.conn ||= EventMachine::connect(@host, @port, Dispatcher, parent: self, ssl: @ssl)
       end
 
       # @return [Boolean]

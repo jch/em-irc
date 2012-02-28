@@ -50,8 +50,8 @@ describe EventMachine::IRC::Client do
   end
 
   context 'connect' do
-    it 'should create an EM TCP connection with host, port, handler, and self' do
-      EventMachine.should_receive(:connect).with('irc.net', '9999', EventMachine::IRC::Dispatcher, parent: subject)
+    it 'should create an EM TCP connection with host, port, handler, and ssl' do
+      EventMachine.should_receive(:connect).with('irc.net', '9999', EventMachine::IRC::Dispatcher, parent: subject, ssl: subject.ssl)
       subject.host = 'irc.net'
       subject.port = '9999'
       subject.connect

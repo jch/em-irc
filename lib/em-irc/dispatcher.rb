@@ -9,20 +9,17 @@ module EventMachine
         raise ArgumentError.new(":parent parameter is required for EM#connect") unless options[:parent]
         # TODO: if parent doesn't respond to a above methods, do a no-op
         @parent = options[:parent]
+        @ssl    = options[:ssl] || false
       end
 
       # @parent.conn is set back to nil when this is created
       def post_init
         @parent.conn = self
-        @parent.ready unless @parent.ssl
+        @parent.ready unless @ssl
       end
 
       def connection_completed
-        if @parent.ssl
-          start_tls
-        else
-          @parent.ready
-        end
+        @ssl ? start_tls : @parent.ready
       end
 
       def ssl_handshake_completed
