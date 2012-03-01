@@ -36,6 +36,12 @@ shared_examples_for "integration" do
       # dan.quit
     end
 
+    dan.on(:message) do |who, channel, message|
+      @who     = who
+      @channel = channel
+      @message = message
+    end
+
     EM.run {
       dan.connect
       bob.connect
@@ -47,7 +53,10 @@ shared_examples_for "integration" do
     dan.nick.should == 'dan'
     dan.history.should =~ /Welcome/
     dan.history.should =~ /JOIN :#americano-test/
-    dan.history.should =~ /dan: hello bob/
+
+    @who.should == "bob"
+    @channel.should == "#americano-test"
+    @message.should == "dan: hello bob"
 
     bob.nick.should == 'bob'
     bob.history.should =~ /Welcome/

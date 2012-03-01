@@ -187,7 +187,10 @@ module EventMachine
           pong(m[:params].first)
           trigger(:ping, *m[:params])
         when 'PRIVMSG'
-          trigger(:message, m[:prefix], m[:params].first, m[:params].slice(1..-1).join(' '))
+          who = m[:prefix].split('!').first
+          channel = m[:params].first
+          message = m[:params].slice(1..-1).join(' ')
+          trigger(:message, who, channel, message)
         when 'QUIT'
         when 'JOIN'
           trigger(:join, m[:prefix], m[:params].first)
