@@ -15,7 +15,6 @@ module EventMachine
       # @parent.conn is set back to nil when this is created
       def post_init
         @parent.conn = self
-        @parent.ready unless @ssl
       end
 
       def connection_completed
