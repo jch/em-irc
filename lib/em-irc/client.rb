@@ -40,10 +40,10 @@ module EventMachine
       def initialize(options = {}, &blk)
         options.symbolize_keys!
         options = {
-          host:     '127.0.0.1',
-          port:     '6667',
-          ssl:      false,
-          realname: 'Anonymous Annie'
+          :host =>     '127.0.0.1',
+          :port =>     '6667',
+          :ssl =>      false,
+          :realname => 'Anonymous Annie'
         }.merge!(options)
 
         @host      = options[:host]
@@ -68,7 +68,7 @@ module EventMachine
       # @see #on
       # @return [EventMachine::Connection]
       def connect
-        self.conn ||= EventMachine::connect(@host, @port, Dispatcher, parent: self, ssl: @ssl)
+        self.conn ||= EventMachine::connect(@host, @port, Dispatcher, :parent => self, :ssl => @ssl)
       end
 
       # @return [Boolean]
