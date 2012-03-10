@@ -12,7 +12,6 @@ require 'em-irc'
 client = EventMachine::IRC::Client.new do
   host 'irc.freenode.net'
   port '6667'
-  nick 'jch'
 
   on(:connect) do
     nick('jch')
