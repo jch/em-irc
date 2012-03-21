@@ -14,5 +14,6 @@ module EventMachine
   module IRC
     autoload :Client,     'em-irc/client'
     autoload :Dispatcher, 'em-irc/dispatcher'
+    autoload :Commands,   'em-irc/commands'
   end
 end
