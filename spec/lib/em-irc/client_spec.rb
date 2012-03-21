@@ -173,13 +173,6 @@ describe EventMachine::IRC::Client do
       subject.should_receive(:pong).with("irc.net")
       subject.handle_parsed_message({prefix: 'irc.net', command: 'PING', params: ['irc.net']})
     end
-
-    # TODO: do we want a delegate object and callbacks?
-    # it 'should call optional delegate' do
-    #   subject.stub(delegate: mock('Delegate'))
-    #   subject.delegate.should_receive(:message)
-    #   subject.handle_parsed_message({prefix: 'jessie!jessie@localhost', command: 'PRIVMSG', params: ['#general', 'hello world'])
-    # end
   end
 
   context 'callbacks' do
