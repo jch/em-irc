@@ -173,7 +173,6 @@ module EventMachine
       def handle_parsed_message(m)
         case m[:command]
         when '001'
-          # ":irc.the.net 001 jessie :Welcome to the Internet Relay Network jessie!~jessie@localhost"
           @nick = m[:params].first
           trigger(:nick, @nick)
         when '433'
@@ -199,7 +198,6 @@ module EventMachine
           # {:prefix=>"irc.the.net", :command=>"433", :params=>["*", "one", "Nickname", "already", "in", "use", "irc.the.net", "451", "*", "Connection", "not", "registered"]}
           # {:prefix=>"irc.the.net", :command=>"432", :params=>["*", "one_1328243723", "Erroneous", "nickname"]}
         end
-        trigger(:raw, m)
       end
 
       # EventMachine Callbacks
@@ -207,6 +205,7 @@ module EventMachine
         data.split("\r\n").each do |message|
           parsed = parse_message(message)
           handle_parsed_message(parsed)
+          trigger(:raw, parsed)
         end
       end
 

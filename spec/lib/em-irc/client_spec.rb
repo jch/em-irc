@@ -133,24 +133,33 @@ describe EventMachine::IRC::Client do
   end
 
   context 'receive_data' do
-    before do
-      subject.stub(:parse_message).and_return(mock.as_null_object)
-      subject.stub(:handle_parsed_message).and_return(mock.as_null_object)
-    end
-
-    it 'should parse messages separated by \r\n' do
-      data = [
+    let(:data) {
+      [
         ":irc.the.net 001 jessie :Welcome to the Internet Relay Network jessie!~jessie@localhost",
         ":irc.the.net 002 jessie :Your host is irc.the.net, running version ngircd-17.1 (i386/apple/darwin11.2.0)",
         ":irc.the.net 003 jessie :This server has been started Fri Feb 03 2012 at 14:42:38 (PST)"
       ].join("\r\n")
+    }
+    let(:parsed_message) {mock.as_null_object}
 
+    before do
+      subject.stub(:parse_message).and_return(parsed_message)
+      subject.stub(:handle_parsed_message)
+    end
+
+    it 'should parse messages separated by \r\n' do
       subject.should_receive(:parse_message).exactly(3).times
-      subject.should_receive(:handle_parsed_message).exactly(3).times
       subject.receive_data(data)
     end
 
     it 'should handle parsed messages' do
+      subject.should_receive(:handle_parsed_message).exactly(3).times
+      subject.receive_data(data)
+    end
+
+    it 'should trigger :raw callbacks' do
+      subject.should_receive(:trigger).with(:raw, parsed_message).exactly(3).times
+      subject.receive_data(data)
     end
   end
 
@@ -166,12 +175,6 @@ describe EventMachine::IRC::Client do
     #   subject.delegate.should_receive(:message)
     #   subject.handle_parsed_message({prefix: 'jessie!jessie@localhost', command: 'PRIVMSG', params: ['#general', 'hello world'])
     # end
-
-    it 'should trigger :raw callbacks' do
-      m = mock('Parsed Response').as_null_object
-      subject.should_receive(:trigger).with(:raw, m)
-      subject.handle_parsed_message(m)
-    end
   end
 
   context 'callbacks' do
