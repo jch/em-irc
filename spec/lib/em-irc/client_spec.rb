@@ -169,9 +169,9 @@ describe EventMachine::IRC::Client do
   end
 
   context 'handle_parsed_message' do
-    it 'should respond to pings' do
-      subject.should_receive(:pong).with("irc.net")
-      subject.handle_parsed_message({prefix: 'irc.net', command: 'PING', params: ['irc.net']})
+    it 'should trigger error for messages 400-599' do
+      subject.should_receive(:trigger).with(:error, 'ERR_NICKNAMEINUSE')
+      subject.handle_parsed_message(command: '433', params: ['ERR_NICKNAMEINUSE'])
     end
   end
 

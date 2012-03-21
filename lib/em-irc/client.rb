@@ -5,6 +5,7 @@ module EventMachine
     class Client
       include DslAccessor
       include IRC::Commands
+      include IRC::Responses
 
       # EventMachine::Connection object to IRC server
       # @private
@@ -141,32 +142,12 @@ module EventMachine
       end
 
       def handle_parsed_message(m)
-        case m[:command]
-        when '001'
-          @nick = m[:params].first
-          trigger(:nick, @nick)
-        when '433'
-          # :irc.the.net 433 * bob :Nickname already in use
-          # ERR_NONICKNAMEGIVEN             ERR_ERRONEUSNICKNAME
-          #  ERR_NICKNAMEINUSE               ERR_NICKCOLLISION
-          #  ERR_UNAVAILRESOURCE             ERR_RESTRICTED
-          @nick = nil
-          trigger(:error, "nick in use")
-        when 'PING'
-          pong(m[:params].first)
-          trigger(:ping, *m[:params])
-        when 'PRIVMSG'
-          who = m[:prefix].split('!').first
-          channel = m[:params].first
-          message = m[:params].slice(1..-1).join(' ')
-          trigger(:message, who, channel, message)
-        when 'QUIT'
-        when 'JOIN'
-          trigger(:join, m[:prefix], m[:params].first)
+        if handler = IRC::Responses::MAPPING[m[:command]]
+          self.send(handler.downcase, m)
+          # error codes 400 to 599
+          trigger(:error, handler) if (m[:command].to_i / 100) > 3
         else
-          # noop
-          # {:prefix=>"irc.the.net", :command=>"433", :params=>["*", "one", "Nickname", "already", "in", "use", "irc.the.net", "451", "*", "Connection", "not", "registered"]}
-          # {:prefix=>"irc.the.net", :command=>"432", :params=>["*", "one_1328243723", "Erroneous", "nickname"]}
+          log Logger::ERROR, "Unimplemented command: #{m[:prefix]} #{m[:command]} #{m[:params].join(' ')}"
         end
       end
 
