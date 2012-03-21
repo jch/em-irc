@@ -129,6 +129,11 @@ describe EventMachine::IRC::Client do
         parsed = subject.parse_message('PING :irc.net')
         parsed[:params] =~ ['irc.net']
       end
+
+      it 'should return strings as a single param' do
+        parsed = subject.parse_message(":irc.the.net 001 jessie :Welcome to the Internet Relay Network jessie!~jessie@localhost")
+        parsed[:params] =~ ['jessie', 'Welcome to the Internet Relay Network jessie!~jessie@localhost']
+      end
     end
   end
 

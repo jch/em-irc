@@ -163,10 +163,14 @@ module EventMachine
       def parse_message(message)
         # TODO: error handling
         result = {}
+
         parts = message.split(' ')
-        result[:prefix] = parts.shift.gsub(/^:/, '') if parts[0] =~ /^:/
-        result[:command] = parts[0]  # cleanup?
-        result[:params] = parts.slice(1..-1).map {|s| s.gsub(/^:/, '')}
+        result[:prefix]  = parts.shift.gsub(/^:/, '') if parts[0] =~ /^:/
+        result[:command] = parts.shift
+        result[:params]  = parts.take_while {|e| e[0] != ':'}
+        if result[:params].size < parts.size
+          result[:params] << parts.slice(result[:params].size..-1).join(" ")
+        end
         result
       end
 
