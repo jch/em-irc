@@ -1,19 +1,19 @@
 module EventMachine
   module IRC
     module Responses
-      def ping(m)
+      def rpl_ping(m)
         pong(m[:params].first)
         trigger(:ping, *m[:params])
       end
 
-      def privmsg(m)
+      def rpl_privmsg(m)
         who     = sender_nick(m[:prefix])
         channel = m[:params].first
         message = m[:params].slice(1..-1).join(' ')
         trigger(:message, who, channel, message)
       end
 
-      def join(m)
+      def rpl_join(m)
         trigger(:join, sender_nick(m[:prefix]), m[:params].first)
       end
 
@@ -167,10 +167,10 @@ module EventMachine
         # Errors 400 - 599
         '433' => 'ERR_NICKNAMEINUSE',
 
-        'PING'    => 'PING',
-        'ERROR'   => 'ERROR',
-        'PRIVMSG' => 'PRIVMSG',
-        'JOIN'    => 'JOIN'
+        'PING'    => 'RPL_PING',
+        'ERROR'   => 'RPL_ERROR',
+        'PRIVMSG' => 'RPL_PRIVMSG',
+        'JOIN'    => 'RPL_JOIN'
       }
     end
   end
