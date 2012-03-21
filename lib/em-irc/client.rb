@@ -122,6 +122,16 @@ module EventMachine
       # Client commands
       # See [RFC 2812](http://tools.ietf.org/html/rfc2812)
 
+      # 3.1.1 Password message
+      #
+      # The PASS command is used to set a ’connection password’.  The
+      # optional password can and MUST be set before any attempt to register
+      # the connection is made.  Currently this requires that user send a
+      # PASS command before sending the NICK/USER combination.
+      def pass(password)
+        send_data("PASS #{password}")
+      end
+
       # @return [String] nick if no param
       # @return nil otherwise
       def nick(nick = nil)
