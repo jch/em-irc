@@ -133,7 +133,9 @@ module EventMachine
         result[:command] = parts.shift
         result[:params]  = parts.take_while {|e| e[0] != ':'}
         if result[:params].size < parts.size
-          result[:params] << parts.slice(result[:params].size..-1).join(" ")
+          full_string = parts.slice(result[:params].size..-1).join(" ")
+          full_string.gsub!(/^:/, '')
+          result[:params] << full_string
         end
         result
       end
