@@ -9,4 +9,4 @@ before_script:
   - "service ngircd stop"
   - "ngircd -f spec/config/ngircd-unencrypted.conf"
   - "ngircd -f spec/config/ngircd-encrypted-gnutls.conf"
-script: "bundle exec rake spec spec:ci"
+script: "bundle exec rake spec"
