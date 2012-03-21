@@ -143,7 +143,8 @@ module EventMachine
 
       def handle_parsed_message(m)
         if handler = IRC::Responses::MAPPING[m[:command]]
-          self.send(handler.downcase, m)
+          handler.downcase!
+          self.send(handler, m) if self.respond_to?(handler)
           # error codes 400 to 599
           trigger(:error, handler) if (m[:command].to_i / 100) > 3
         else
