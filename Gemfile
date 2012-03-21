@@ -4,7 +4,6 @@ source 'http://rubygems.org'
 gemspec
 
 group :development do
-  gem 'pry'
   gem 'yard'
   gem 'redcarpet'
   gem 'guard'
@@ -13,6 +12,7 @@ group :development do
 end
 
 group :development, :test do
+  gem 'pry'
   gem 'rake'
   gem 'rspec', "~> 2"
 end
