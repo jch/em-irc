@@ -120,37 +120,6 @@ module EventMachine
         self.conn.send_data(message)
       end
 
-      # @return [Hash] h
-      # @option h [String] :prefix
-      # @option h [String] :command
-      # @option h [Array] :params
-      # @private
-      def parse_message(message)
-        # TODO: error handling
-        result = {}
-
-        parts = message.split(' ')
-        result[:prefix]  = parts.shift.gsub(/^:/, '') if parts[0] =~ /^:/
-        result[:command] = parts.shift
-        result[:params]  = parts.take_while {|e| e[0] != ':'}
-        if result[:params].size < parts.size
-          full_string = parts.slice(result[:params].size..-1).join(" ")
-          full_string.gsub!(/^:/, '')
-          result[:params] << full_string
-        end
-        result
-      end
-
-      def handle_parsed_message(m)
-        if handler = IRC::Responses::MAPPING[m[:command]]
-          self.send(handler.downcase, m) if self.respond_to?(handler.downcase)
-          # error codes 400 to 599
-          trigger(:error, handler) if (m[:command].to_i / 100) > 3
-        else
-          log Logger::ERROR, "Unimplemented command: #{m[:prefix]} #{m[:command]} #{m[:params].join(' ')}"
-        end
-      end
-
       # EventMachine Callbacks
       def receive_data(data)
         data.split("\r\n").each do |message|
