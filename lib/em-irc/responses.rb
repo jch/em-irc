@@ -10,7 +10,7 @@ module EventMachine
         server_reply 'PRIVMSG' do |m|
           who     = sender_nick(m[:prefix])
           channel = m[:params].first
-          message = m[:params].slice(1..-1).join(' ')
+          message = m[:params].slice(1..-1).join(' ').gsub(/^:/, '')
           trigger(:message, who, channel, message)
         end
 

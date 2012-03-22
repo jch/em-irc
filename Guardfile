@@ -12,6 +12,9 @@ guard 'rspec', :version => 2, :cli => '--tag ~integration' do
   watch('spec/spec_helper.rb')  { "spec" }
 end
 
-guard 'yard', :stdout => '/dev/null' do
-  watch(%r{lib/.+\.rb})
+begin
+  guard 'yard', :stdout => '/dev/null' do
+    watch(%r{lib/.+\.rb})
+  end
+rescue => e
 end

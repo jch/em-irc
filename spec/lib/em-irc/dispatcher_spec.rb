@@ -19,7 +19,7 @@ shared_examples_for 'dispatcher' do
     parent.should_receive(:unbind)
     EventMachine.run {
       EventMachine::start_server('127.0.0.1', '198511', TestServer)
-      EventMachine::connect('127.0.0.1', '198511', EventMachine::IRC::Dispatcher, parent: parent, ssl: ssl)
+      EventMachine::connect('127.0.0.1', '198511', EventMachine::IRC::Dispatcher, :parent => parent, :ssl => ssl)
       EventMachine::add_timer(3) {
         EventMachine::stop_event_loop
         raise "Never reached receive_data or took too long"

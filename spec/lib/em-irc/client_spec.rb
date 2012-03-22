@@ -51,14 +51,14 @@ describe EventMachine::IRC::Client do
 
   context 'connect' do
     it 'should create an EM TCP connection with host, port, handler, and ssl' do
-      EventMachine.should_receive(:connect).with('irc.net', '9999', EventMachine::IRC::Dispatcher, parent: subject, ssl: subject.ssl)
+      EventMachine.should_receive(:connect).with('irc.net', '9999', EventMachine::IRC::Dispatcher, :parent => subject, :ssl => subject.ssl)
       subject.host = 'irc.net'
       subject.port = '9999'
       subject.connect
     end
 
     it 'should be idempotent' do
-      EventMachine.stub(connect: mock('Connection'))
+      EventMachine.stub(:connect => mock('Connection'))
       EventMachine.should_receive(:connect).exactly(1).times
       subject.connect
       subject.connect
@@ -68,17 +68,17 @@ describe EventMachine::IRC::Client do
   context 'send_data' do
     before do
       @connection = mock('Connection')
-      subject.stub(conn: @connection)
-      subject.stub(connected?: true)
+      subject.stub(:conn => @connection)
+      subject.stub(:connected? => true)
     end
 
     it 'should return false if not connected' do
-      subject.stub(connected?: nil)
+      subject.stub(:connected? => nil)
       subject.send_data("NICK jch").should be_false
     end
 
     it 'should send message to irc server' do
-      subject.stub(conn: @connection)
+      subject.stub(:conn => @connection)
       @connection.should_receive(:send_data).with("NICK jch\r\n")
       subject.send_data("NICK jch")
     end
@@ -86,7 +86,7 @@ describe EventMachine::IRC::Client do
 
   context 'ready' do
     before do
-      subject.stub(conn: mock.as_null_object)
+      subject.stub(:conn => mock.as_null_object)
     end
 
     it 'should call :connect callback' do
@@ -171,7 +171,7 @@ describe EventMachine::IRC::Client do
   context 'handle_parsed_message' do
     it 'should trigger error for messages 400-599' do
       subject.should_receive(:trigger).with(:error, 'ERR_NICKNAMEINUSE')
-      subject.handle_parsed_message(command: '433', params: ['ERR_NICKNAMEINUSE'])
+      subject.handle_parsed_message(:command => '433', :params => ['ERR_NICKNAMEINUSE'])
     end
   end
 
