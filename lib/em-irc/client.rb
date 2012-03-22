@@ -11,14 +11,22 @@ module EventMachine
       # @private
       attr_accessor :conn
 
-      # IRC server to connect to. Defaults to 127.0.0.1:6667
-      # attr_accessor :host, :port
-      dsl_accessor :host, :port
+      # @macro dsl_accessor
+      #   Accessor for `$1`
+      # Defaults to '127.0.0.1'
+      dsl_accessor :host
 
+      # @macro dsl_accessor
+      # Defaults to '6667'
+      dsl_accessor :port
+
+      # @macro dsl_accessor
       dsl_accessor :realname
+
+      # @macro dsl_accessor
       dsl_accessor :ssl
 
-      # Custom logger
+      # @macro dsl_accessor
       dsl_accessor :logger
 
       # Set of channels that this client is connected to
@@ -77,9 +85,22 @@ module EventMachine
         @connected
       end
 
-      # Callbacks
+      # Start running the client
+      def run!
+        EM.epoll
+        EventMachine.run do
+          trap("TERM") { EM::stop }
+          trap("INT")  { EM::stop }
+          connect
+          log Logger::INFO, "Starting IRC client..."
+        end
+        log Logger::INFO, "Stopping IRC client"
+        @logger.close if @logger
+      end
 
-      # Register a callback with :name as one of the following, and
+      # === Callbacks
+
+      # Register a callback with `:name` as one of the following, and
       # a block with the same number of params.
       #
       # @example
@@ -106,13 +127,20 @@ module EventMachine
       end
 
       # Trigger a named callback
+      # @private
       def trigger(name, *args)
         # TODO: should this be instance_eval(&blk)? prevents it from non-dsl style
         (@callbacks[name.to_sym] || []).each {|blk| blk.call(*args)}
       end
 
+      # @private
+      def log(*args)
+        @logger.log(*args) if @logger
+      end
+
       # Sends raw message to IRC server. Assumes message is correctly formatted
       # TODO: what if connect fails? or disconnects?
+      # @private
       def send_data(message)
         return false unless connected?
         message = message + "\r\n"
@@ -120,7 +148,8 @@ module EventMachine
         self.conn.send_data(message)
       end
 
-      # EventMachine Callbacks
+      # === EventMachine Callbacks
+      # @private
       def receive_data(data)
         data.split("\r\n").each do |message|
           parsed = parse_message(message)
@@ -139,22 +168,6 @@ module EventMachine
       # @private
       def unbind
         trigger(:disconnect)
-      end
-
-      def log(*args)
-        @logger.log(*args) if @logger
-      end
-
-      def run!
-        EM.epoll
-        EventMachine.run do
-          trap("TERM") { EM::stop }
-          trap("INT")  { EM::stop }
-          connect
-          log Logger::INFO, "Starting IRC client..."
-        end
-        log Logger::INFO, "Stopping IRC client"
-        @logger.close if @logger
       end
     end
   end
