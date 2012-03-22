@@ -1,7 +1,7 @@
 module EventMachine
   module IRC
     # Client commands
-    # See {http://tools.ietf.org/html/rfc2812 RFC 2812}
+    # @see http://tools.ietf.org/html/rfc2812 RFC 2812
     module Commands
       # Set connection password
       # @see http://tools.ietf.org/html/rfc2812#section-3.1.1 3.1.1 Password message
