@@ -23,5 +23,5 @@ group :darwin do
 end
 
 platform :ruby_19 do
-  gem 'guard-yard'
+  gem 'guard-yard', :group => :development
 end

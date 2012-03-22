@@ -64,6 +64,18 @@ In the examples folder, there are runnable examples.
 * [RFC 2812 - Internet Relay Chat: Client Protocol](http://tools.ietf.org/html/rfc2812) specifics of client protocol
 * [RFC 2813 - Internet Relay Chat: Server Protocol](http://tools.ietf.org/html/rfc2813) specifics of server protocol
 
+## Platforms
+
+The following platforms are tentatively supported:
+
+* 1.8.7
+* 1.9.2
+* 1.9.3
+* ree
+* Rubinius
+
+I currently develop ruby 1.9.3, so it'll be the VM that gets the most support.
+
 ## Development
 
 To run integration specs, you'll need to run a ssl and a non-ssl irc server locally.
