@@ -9,6 +9,7 @@ group :development do
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-bundler'
+  gem 'guard-yard'
 end
 
 group :development, :test do
