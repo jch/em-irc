@@ -50,7 +50,7 @@ end
 
 ## References
 
-* [API Documentation](http://rubydoc.info/gems/em-irc/0.0.1/frames)
+* [API Documentation](http://rubydoc.info/gems/em-irc)
 * [RFC 1459 - Internet Relay Chat Protocol](http://tools.ietf.org/html/rfc1459) overview of IRC architecture
 * [RFC 2812 - Internet Relay Chat: Client Protocol](http://tools.ietf.org/html/rfc2812) specifics of client protocol
 * [RFC 2813 - Internet Relay Chat: Server Protocol](http://tools.ietf.org/html/rfc2813) specifics of server protocol
