@@ -48,15 +48,6 @@ client = EventMachine::IRC::Client.new do |c|
 end
 ````
 
-## Examples
-
-In the examples folder, there are runnable examples.
-
-* cli.rb - takes input from keyboard, outputs to stdout
-* websocket.rb - 
-* echo.rb - bot that echos everything
-* callback.rb - demonstrate how callbacks work
-
 ## References
 
 * [API Documentation](http://rubydoc.info/gems/em-irc/0.0.1/frames)
@@ -115,11 +106,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
-## TODO
-
-* can we skip using Dispatcher connection handler class?
-* extract :on, :trigger callback gem that works on instances. [hook](https://github.com/apotonick/hooks), but works with instances
-* would prefer the interface to look synchronous, but work async
-* ssl dispatcher testing
-* speed up integration specs
