@@ -169,6 +169,11 @@ module EventMachine
       def unbind
         trigger(:disconnect)
       end
+
+      protected
+      def channel?(string)
+        !!(string =~ /^(#|&)/)
+      end
     end
   end
 end

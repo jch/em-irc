@@ -87,4 +87,80 @@ describe EventMachine::IRC::Commands do
       subject.topic('#foo', '')
     end
   end
+
+  context "names" do
+    it 'should list names for a single channel' do
+      subject.should_receive(:send_data).with("NAMES #foo")
+      subject.names("#foo")
+    end
+
+    it 'should list names for multiple channels' do
+      subject.should_receive(:send_data).with("NAMES #foo,&bar")
+      subject.names("#foo", "&bar")
+    end
+
+    it 'should list names with a target server' do
+      subject.should_receive(:send_data).with("NAMES #foo,&bar irc.net")
+      subject.names("#foo", "&bar", :target => 'irc.net')
+    end
+  end
+
+  context "list" do
+    it 'should list channel and topic' do
+      subject.should_receive(:send_data).with("LIST #foo")
+      subject.list("#foo")
+    end
+
+    it 'should list channels and topics for multiple channels' do
+      subject.should_receive(:send_data).with("LIST #foo,&bar")
+      subject.list("#foo", "&bar")
+    end
+
+    it 'should list names with a target server' do
+      subject.should_receive(:send_data).with("LIST #foo,&bar irc.net")
+      subject.list("#foo", "&bar", :target => 'irc.net')
+    end
+  end
+
+  context 'invite' do
+    it 'should invite user to a channel' do
+      subject.should_receive(:send_data).with("INVITE jch #foo")
+      subject.invite("jch", "#foo")
+    end
+  end
+
+  context 'kick' do
+    it 'should kick user from channel' do
+      subject.should_receive(:send_data).with("KICK #general jch")
+      subject.kick("#general", "jch")
+    end
+
+    it 'should kick multiple users from channels' do
+      subject.should_receive(:send_data).with("KICK #general,&bar jch,wcc")
+      subject.kick("#general", "&bar", "jch", "wcc")
+    end
+
+    it 'should raise error if no channels' do
+      expect {
+        subject.kick('jch')
+      }.to raise_error(ArgumentError)
+    end
+  end
+
+  context 'whois' do
+    it 'should query user' do
+      subject.should_receive(:send_data).with("WHOIS jch")
+      subject.whois('jch')
+    end
+
+    it 'should query users' do
+      subject.should_receive(:send_data).with("WHOIS jch,bar")
+      subject.whois('jch', 'bar')
+    end
+
+    it 'should query user from a target server' do
+      subject.should_receive(:send_data).with("WHOIS irc.net jch,bar")
+      subject.whois('jch', 'bar', :target => 'irc.net')
+    end
+  end
 end
