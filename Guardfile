@@ -14,7 +14,7 @@ end
 
 begin
   guard 'yard', :stdout => '/dev/null' do
-    watch(%r{lib/.+\.rb})
+    watch(%r{^lib/.+\.rb})
   end
 rescue => e
 end
