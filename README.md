@@ -31,7 +31,7 @@ client = EventMachine::IRC::Client.new do
   end
 
   # callback for all messages sent from IRC server
-  on(:raw) do |hash|
+  on(:parsed) do |hash|
     puts "#{hash[:prefix]} #{hash[:command]} #{hash[:params].join(' ')}"
   end
 end

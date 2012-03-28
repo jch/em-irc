@@ -138,22 +138,31 @@ describe EventMachine::IRC::Client do
   end
 
   context 'receive_data' do
-    let(:data) {
+    let(:messages) {
       [
         ":irc.the.net 001 jessie :Welcome to the Internet Relay Network jessie!~jessie@localhost",
         ":irc.the.net 002 jessie :Your host is irc.the.net, running version ngircd-17.1 (i386/apple/darwin11.2.0)",
         ":irc.the.net 003 jessie :This server has been started Fri Feb 03 2012 at 14:42:38 (PST)"
-      ].join("\r\n")
+      ]
     }
+    let(:data) {messages.join("\r\n")}
     let(:parsed_message) {mock.as_null_object}
 
     before do
       subject.stub(:parse_message).and_return(parsed_message)
       subject.stub(:handle_parsed_message)
+      subject.stub(:trigger)
     end
 
     it 'should parse messages separated by \r\n' do
       subject.should_receive(:parse_message).exactly(3).times
+      subject.receive_data(data)
+    end
+
+    it 'should trigger :raw callbacks' do
+      subject.should_receive(:trigger).with(:raw, messages[0])
+      subject.should_receive(:trigger).with(:raw, messages[1])
+      subject.should_receive(:trigger).with(:raw, messages[2])
       subject.receive_data(data)
     end
 
@@ -162,8 +171,8 @@ describe EventMachine::IRC::Client do
       subject.receive_data(data)
     end
 
-    it 'should trigger :raw callbacks' do
-      subject.should_receive(:trigger).with(:raw, parsed_message).exactly(3).times
+    it 'should trigger :parsed callbacks' do
+      subject.should_receive(:trigger).with(:parsed, parsed_message).exactly(3).times
       subject.receive_data(data)
     end
   end

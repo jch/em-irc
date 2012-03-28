@@ -118,8 +118,8 @@ module EventMachine
       #     @param target [String]
       #     @param message [String]
       #  
-      #   :raw - called for all messages from server
-      #     @param raw_hash [Hash] same format as return of #parse_message
+      #   :parsed - called for all messages from server
+      #     @param parsed_hash [Hash] same format as return of #parse_message
       def on(name, &blk)
         # TODO: I thought Hash.new([]) would work, but it gets empted out
         # TODO: normalize aliases :privmsg, :message, etc
@@ -138,7 +138,7 @@ module EventMachine
         @logger.log(*args) if @logger
       end
 
-      # Sends raw message to IRC server. Assumes message is correctly formatted
+      # Sends message to IRC server. Assumes message is correctly formatted
       # TODO: what if connect fails? or disconnects?
       # @private
       def send_data(message)
@@ -152,9 +152,10 @@ module EventMachine
       # @private
       def receive_data(data)
         data.split("\r\n").each do |message|
+          trigger(:raw, message)
           parsed = parse_message(message)
           handle_parsed_message(parsed)
-          trigger(:raw, parsed)
+          trigger(:parsed, parsed)
         end
       end
 
