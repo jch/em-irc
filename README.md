@@ -48,6 +48,15 @@ client = EventMachine::IRC::Client.new do |c|
 end
 ````
 
+## Examples
+
+See `examples` folder for examples. These are directly runnable.
+For example, to run the interactive command line client:
+
+```
+ruby examples/interactive.rb
+```
+
 ## References
 
 * [API Documentation](http://rubydoc.info/gems/em-irc)
