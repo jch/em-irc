@@ -301,7 +301,7 @@ module EventMachine
       # Set user as away with optional message
       # @see http://tools.ietf.org/html/rfc2812#section-4.1 4.1 Away
       def away(message = nil)
-        send_data("AWAY" + (message ? ":#{message}" : ""))
+        send_data("AWAY " + (message ? ":#{message}" : ""))
       end
 
       # Force user to re-read config
