@@ -10,8 +10,11 @@ require 'active_support/core_ext/array/extract_options'
 require 'eventmachine'
 require 'forwardable'
 require 'set'
+require 'citrus'
 
 $:.unshift File.expand_path '..', __FILE__
+
+Citrus.require 'support/grammar'
 
 module EventMachine
   module IRC

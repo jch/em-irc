@@ -1,0 +1,77 @@
+grammar EventMachine::IRC::Grammar
+  rule messages
+    message*
+  end
+
+  rule message
+    (prefix ' ')? command params*15 "\r\n"
+  end
+
+  rule prefix
+    ':' nonspace+
+  end
+
+  rule command
+    /\d{3}/ | [A-Z_]+
+  end
+
+  rule rpl_welcome
+    'Welcome to the Internet Relay Network ' nick '!' user '@' host
+  end
+
+  rule rpl_yourhost
+    'Your host is ' host ', running version ' version:.+
+  end
+
+  rule rpl_created
+    'This server was created ' date:.+
+  end
+
+  rule rpl_myinfo
+    host ' ' version:nonspace+ ' ' available_user_modes:mode+ ' ' available_channel_modes:mode+
+  end
+
+  rule rpl_bounce
+    'Try server ' host ', port ' port:[0-9]+
+  end
+
+  rule rpl_userhost
+    userhost (' ' userhost)*
+  end
+
+  rule userhost
+    nick '*'? '=' ('+'|'-') hostname
+  end
+
+  rule rpl_ison
+    nick (' ' nick)*
+  end
+
+  rule nick
+    [^\s!@+*=]+
+  end
+
+  rule user
+    nick
+  end
+
+  rule host
+    [A-Za-z.0-9]+
+  end
+
+  rule hostname
+    user '@' host
+  end
+
+  rule foo
+    nick user
+  end
+
+  rule nonspace
+    [^\s]
+  end
+
+  rule mode
+    [a-zA-Z]
+  end
+end

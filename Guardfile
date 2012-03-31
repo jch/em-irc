@@ -10,6 +10,7 @@ guard 'rspec', :version => 2, :cli => '--tag ~integration' do
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('lib/em-irc.rb')        { "spec" }
   watch('spec/spec_helper.rb')  { "spec" }
+  watch('lib/support/grammar.citrus') { "spec/lib/grammar_spec.rb" }
 end
 
 begin
